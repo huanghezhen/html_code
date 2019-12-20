@@ -39,8 +39,8 @@
           <el-table-column sortable prop="timeOfEntry" label="入职时间" width="150"></el-table-column>
           <el-table-column sortable label="状态" width="120">
             <template slot-scope="scope">
-              <el-switch 
-              v-model="scope.row.accountStatus" 
+              <el-switch
+              v-model="scope.row.accountStatus"
               active-color="#13ce66"
               inactive-color="#ff4949"
                @change="handleStatus(scope.row)">
@@ -53,7 +53,7 @@
                 查看
               </router-link>
               <el-button @click="handleRole(scope.row)" type="text" size="small">分配角色</el-button>
-              <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+              <el-button v-if="show('point-user-delete')" @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -78,6 +78,7 @@ import {list,remove} from "@/api/base/users"
 import PageTool from './../../components/page/page-tool'
 import employeesAdd from './../components/add'
 import addRole from './../components/addRole'
+import {hasPermissionPoint} from '../../utils/permission'
 export default {
   name: 'employeesList',
   components: {
@@ -93,10 +94,13 @@ export default {
       requestParameters:{
         page: 1,
         size: 10,
-      }    
+      }
     }
   },
   methods: {
+    show(name){
+      return hasPermissionPoint(name)
+    },
     // 业务方法
     doQuery(params) {
         list(this.requestParameters)
